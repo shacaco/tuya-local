@@ -1,0 +1,203 @@
+name: EV charger
+products:
+  - id: 829sxbjukgtgwnr8
+    manufacturer: Nippon Charge
+
+entities:
+  - entity: switch
+    name: Charging
+    icon: "mdi:ev-station"
+    dps:
+      - id: 18  # switch
+        type: boolean
+        name: switch
+
+  - entity: sensor
+    translation_key: status
+    icon: "mdi:ev-station"
+    class: enum
+    dps:
+      - id: 3  # work_state
+        type: string
+        name: sensor
+        mapping:
+          - dps_val: charger_free
+            value: available
+          - dps_val: charger_insert
+            value: plugged_in
+          - dps_val: charger_free_fault
+            value: fault_unplugged
+          - dps_val: charger_wait
+            value: waiting
+          - dps_val: charger_charging
+            value: charging
+          - dps_val: charger_pause
+            value: paused
+          - dps_val: charger_end
+            value: charged
+          - dps_val: charger_fault
+            value: fault
+      - id: 23  # "HW:1.0, SW:1.4.3"
+        type: string
+        optional: true
+        name: version
+
+  - entity: number
+    name: Current limit
+    class: current
+    category: config
+    icon: "mdi:ev-plug-type2"
+    mode: box
+    dps:
+      - id: 4  # charge_cur_set
+        type: integer
+        name: value
+        unit: A
+        range:
+          min: 6
+          max: 32
+
+  - entity: sensor
+    class: power
+    dps:
+      - id: 9  # power_total
+        type: integer
+        optional: true
+        name: sensor
+        unit: kW
+        class: measurement
+        mapping:
+          - scale: 1000
+
+  - entity: sensor
+    name: Session energy
+    class: energy
+    dps:
+      - id: 25  # charge_energy_once
+        type: integer
+        optional: true
+        name: sensor
+        unit: kWh
+        class: total
+        mapping:
+          - scale: 100
+
+  - entity: sensor
+    name: Total energy
+    class: energy
+    dps:
+      - id: 1  # forward_energy_total
+        type: integer
+        optional: true
+        name: sensor
+        unit: kWh
+        class: total_increasing
+        mapping:
+          - scale: 100
+
+  - entity: sensor
+    class: temperature
+    category: diagnostic
+    dps:
+      - id: 24  # temp_current
+        type: integer
+        name: sensor
+        unit: C
+        class: measurement
+
+  - entity: binary_sensor
+    class: problem
+    category: diagnostic
+    dps:
+      - id: 10  # alarm
+        type: bitfield
+        name: sensor
+        mapping:
+          - dps_val: 0
+            value: false
+          - dps_val: null
+            value: false
+          - value: true
+      - id: 10
+        type: bitfield
+        name: fault_code
+
+  - entity: sensor
+    name: Connection
+    class: enum
+    icon: "mdi:ev-plug-type2"
+    category: diagnostic
+    dps:
+      - id: 13  # connection_state, the control pilot
+        type: string
+        name: sensor
+        mapping:
+          - dps_val: controlpi_12v
+            value: No vehicle
+          - dps_val: controlpi_12v_pwm
+            value: Communication initialising
+          - dps_val: controlpi_9v
+            value: Vehicle detected
+          - dps_val: controlpi_9v_pwm
+            value: Vehicle connected
+          - dps_val: controlpi_6v
+            value: Ready to charge
+          - dps_val: controlpi_6v_pwm
+            value: Charging
+          - dps_val: controlpi_error
+            value: Fault
+
+  - entity: select
+    translation_key: charging_mode
+    category: config
+    dps:
+      - id: 14  # work_mode
+        type: string
+        name: option
+        mapping:
+          - dps_val: charge_now
+            value: immediate
+          - dps_val: charge_pct
+            value: charge_to_percent
+          - dps_val: charge_energy
+            value: fixed_charge
+          - dps_val: charge_schedule
+            value: scheduled_charge
+
+  - entity: number
+    name: Energy to charge
+    class: energy
+    category: config
+    icon: "mdi:battery-charging"
+    dps:
+      - id: 17  # charge_energy, used in fixed charge mode
+        type: integer
+        optional: true
+        name: value
+        unit: kWh
+        range:
+          min: 1
+          max: 2000000
+        mapping:
+          - scale: 100
+
+  - entity: sensor
+    name: Remaining energy
+    class: energy
+    category: diagnostic
+    dps:
+      - id: 15  # balance_energy
+        type: integer
+        name: sensor
+        unit: kWh
+        mapping:
+          - scale: 100
+
+  - entity: button
+    name: Reset energy
+    category: config
+    icon: "mdi:counter"
+    dps:
+      - id: 16  # clear_energy
+        type: boolean
+        name: button
