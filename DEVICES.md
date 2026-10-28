@@ -799,7 +799,6 @@
 - Lidl Tronic solar power storage and Balcony solar inverter
 - MakeSkyBlue MPPT solar battery charger
 - Nine 32A EV charger
-- Nippon Charge EV charger
 - Noeifevo Q21W EV charger
 - Olight Ostation 2 battery charging station
 - Oscal PowerMax 1800SE, 2400 Pro and 6000 portable power stations
